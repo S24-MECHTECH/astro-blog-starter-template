@@ -1,0 +1,9 @@
+name = "s24-webflow-webhook"
+main = "workers/webflow-webhook.js"
+compatibility_date = "2024-01-01"
+
+[account]
+id = "38dad218e1092829145d4940b0f2292c"
+
+# Secrets die gesetzt werden müssen:
+// wrangler secret put WEBFLOW_API_TOKEN
