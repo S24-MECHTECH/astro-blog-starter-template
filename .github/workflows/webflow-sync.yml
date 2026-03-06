@@ -1,0 +1,90 @@
+# Webflow CMS Sync - Astro Cloud Integration
+name: Sync Webflow to Astro
+
+on:
+  repository_dispatch:
+    types: [webflow-update]
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'src/data/**'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+      
+      - name: Fetch Webflow CMS Data
+        run: |
+          curl -s -X GET "https://api.webflow.com/v2/collections/68d361b0271a5d106adb4d4a/items?limit=100" \
+            -H "Authorization: Bearer ${{ secrets.WEBFLOW_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -o src/data/webflow-items.json
+      
+      - name: Transform Data to Astro Format
+        run: |
+          cat > scripts/transform-webflow.js << 'EOF'
+          const fs = require('fs');
+          const data = JSON.parse(fs.readFileSync('src/data/webflow-items.json', 'utf8'));
+          
+          const articles = data.items.map(item => {
+            const fd = item.fieldData;
+            return {
+              id: item.id,
+              slug: fd.slug || fd.name?.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+              name: fd.name,
+              title: fd['seo-title'] || fd.name,
+              description: fd['seo-description'] || '',
+              content: fd['content-article'] || '',
+              faq: fd['faq-section'] || '',
+              heroHeading: fd['hero-heading-2'] || '',
+              heroSubheading: fd['hero-subheading-2'] || '',
+              heroReady: fd['hero-ready'] || false,
+              heroCtaText: fd['hero-cta-text'] || 'Jetzt kaufen',
+              heroCtaUrl: fd['hero-cta-url'] || 'https://www.siliconedolls24.com',
+              brand: fd.brand || '',
+              model: fd.model || '',
+              price: fd.price || '0',
+              currency: fd.currency || 'EUR',
+              createdAt: item.createdOn,
+              updatedAt: item.lastUpdated,
+              publishedAt: item.lastPublished
+            };
+          });
+          
+          fs.writeFileSync('src/data/articles.json', JSON.stringify(articles, null, 2));
+          
+          // Create individual files
+          if (!fs.existsSync('src/data/articles')) {
+            fs.mkdirSync('src/data/articles');
+          }
+          articles.forEach(article => {
+            fs.writeFileSync(
+              `src/data/articles/${article.slug}.json`,
+              JSON.stringify(article, null, 2)
+            );
+          });
+          
+          console.log(`Transformed ${articles.length} articles`);
+          EOF
+          node scripts/transform-webflow.js
+      
+      - name: Commit Changes
+        run: |
+          git config user.name "Webflow Sync Bot"
+          git config user.email "bot@s24-mechtech.de"
+          git add src/data/
+          git diff --quiet && git diff --staged --quiet || git commit -m "Sync: Webflow CMS update $(date +'%Y-%m-%d %H:%M')"
+          git push
+
+      - name: Trigger Deployment
+        if: success()
+        run: |
+          curl -X POST "${{ secrets.ASTRO_DEPLOY_HOOK }}"
