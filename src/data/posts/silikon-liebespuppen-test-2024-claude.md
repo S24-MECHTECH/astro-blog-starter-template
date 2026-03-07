@@ -1,6 +1,6 @@
 ---
 title: "Silikon Liebespuppen Test 2024"
-date: 2026-03-07T22:26:49.043Z
+date: 2026-03-07T22:50:36.170Z
 description: "Umfassender Test der beliebtesten Silikon Liebespuppen 2024. Modellvergleich, Preise, Qualit�t und Expertenbewertungen."
 slug: "silikon-liebespuppen-test-2024-claude"
 ---
