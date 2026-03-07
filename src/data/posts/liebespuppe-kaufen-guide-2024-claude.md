@@ -1,6 +1,6 @@
 ---
 title: "Liebespuppe kaufen - Der komplette Guide"
-date: 2026-03-07T22:50:36.170Z
+date: 2026-03-07T23:26:04.986Z
 description: "Alles was Sie wissen m�ssen bevor Sie eine Liebespuppe kaufen. Preise, Qualit�t und Tipps vom Experten."
 slug: "liebespuppe-kaufen-guide-2024-claude"
 ---
