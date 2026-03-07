@@ -1,6 +1,6 @@
 ---
 title: "Sexpuppe Test - Die besten Modelle 2024"
-date: 2026-03-07T05:52:44.582Z
+date: 2026-03-07T06:46:16.472Z
 description: "Aktueller Sexpuppe Test 2024. Vergleichen Sie die besten Modelle und Preise."
 slug: "sexpuppe-test-2024-claude"
 ---
