@@ -15,24 +15,29 @@ on:
 jobs:
   sync:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GH_TOKEN }}
-      
+          # Use built-in GITHUB_TOKEN for commits
+          # No need for separate GH_TOKEN secret
+          
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '20'
       
       - name: Fetch Webflow CMS Data
+        env:
+          WEBFLOW_TOKEN: ${{ secrets.WEBFLOW_API_TOKEN }}
         run: |
           curl -s -X GET "https://api.webflow.com/v2/collections/68d361b0271a5d106adb4d4a/items?limit=100" \
-            -H "Authorization: Bearer ${{ secrets.WEBFLOW_API_TOKEN }}" \
+            -H "Authorization: Bearer $WEBFLOW_TOKEN" \
             -H "Content-Type: application/json" \
             -o src/data/webflow-items.json
-          echo "Fetched $(node -e "console.log(JSON.parse(require('fs').readFileSync('src/data/webflow-items.json')).items.length)") items"
+          echo "Fetched $(node -e "console.log(JSON.parse(require('fs').readFileSync('src/data/webflow-items.json', 'utf8')).items.length)") items"
       
       - name: Transform Data
         run: node scripts/transform-webflow.js src/data/webflow-items.json src/data
@@ -53,9 +58,9 @@ jobs:
         if: success()
         run: |
           echo "Triggering Astro deployment..."
-          # Trigger via repository dispatch to start deploy workflow
+          # Trigger via repository dispatch using GITHUB_TOKEN
           curl -X POST https://api.github.com/repos/S24-MECHTECH/astro-blog-starter-template/dispatches \
             -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${{ secrets.GH_TOKEN }}" \
+            -H "Authorization: Bearer ${{ github.token }}" \
             -H "Content-Type: application/json" \
             -d '{"event_type":"astro-deploy"}'
