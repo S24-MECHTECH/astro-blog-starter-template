@@ -1,6 +1,6 @@
 ---
 title: "Premium Silikonpuppe 5"
-date: 2026-03-07T11:46:59.922Z
+date: 2026-03-07T12:53:52.009Z
 description: "Die Premium Silikonpuppe 5 bietet höchste Qualität und realistische Details."
 slug: "premium-silikonpuppe-5"
 ---
