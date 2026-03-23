@@ -36,6 +36,8 @@ function extractString(value: unknown): string {
 // Normalize Webflow item to our interface
 function normalizeItem(raw: Record<string, unknown>): WebflowItem {
   const fieldData = (raw.fieldData || {}) as Record<string, unknown>;
+  // hero-ready: true = published, hero-ready: false = draft
+  const heroReady = fieldData['hero-ready'];
   return {
     id: String(raw.id || ''),
     slug: extractString(fieldData.slug) || extractString(fieldData['slug']),
@@ -54,13 +56,13 @@ function normalizeItem(raw: Record<string, unknown>): WebflowItem {
     ogDescription: extractString(fieldData['og-description-2']),
     ogImage: extractString(fieldData['og-image-3']),
     footerText: extractString(fieldData['footer-text']),
-    isDraft: Boolean(fieldData['hero-ready'] === false),
+    // hero-ready === true → published (not draft)
+    isDraft: heroReady !== true,
     lastUpdated: String(raw.lastUpdated || ''),
   };
 }
 
-// Get all published items (hero-ready = false means NOT ready = draft)
-// hero-ready: false = draft, hero-ready: true = published
+// Get all CMS items
 export function getAllItems(): WebflowItem[] {
   const rawItems = webflowData.items as Record<string, unknown>[];
   return rawItems.map(normalizeItem);
@@ -68,7 +70,7 @@ export function getAllItems(): WebflowItem[] {
 
 // Get only published items (hero-ready === true)
 export function getPublishedItems(): WebflowItem[] {
-  return getAllItems().filter(item => item.isDraft === false && item.slug);
+  return getAllItems().filter(item => !item.isDraft && item.slug);
 }
 
 // Get item by slug
@@ -79,5 +81,5 @@ export function getItemBySlug(slug: string): WebflowItem | undefined {
 // Get first published item (for homepage hero)
 export function getFirstPublishedItem(): WebflowItem | undefined {
   const published = getPublishedItems();
-  return published.length > 0 ? published[0] : getAllItems()[0];
+  return published.length > 0 ? published[0] : undefined;
 }
