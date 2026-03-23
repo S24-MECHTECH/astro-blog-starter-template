@@ -1,0 +1,134 @@
+---
+import type { WebflowItem } from '../lib/webflow';
+
+interface Props {
+  item: WebflowItem;
+}
+
+const { item } = Astro.props;
+---
+
+<section class="content-section">
+	<div class="container">
+		<div class="content-grid">
+			<article class="main-content">
+				<h2>{item.name}</h2>
+				{item.description && <p class="description">{item.description}</p>}
+				{item.contentArticle && (
+					<div class="article-content prose" set:html={item.contentArticle} />
+				)}
+			</article>
+			<aside class="sidebar">
+				<div class="sidebar-card">
+					<h3>Premium Qualität</h3>
+					<ul class="benefits-list">
+						<li>✅ 100% Made in Germany</li>
+						<li>✅ Diskreter Versand</li>
+						<li>✅ 2 Jahre Garantie</li>
+						<li>✅ Kostenlose Beratung</li>
+						<li>✅ SSL Verschlüsselt</li>
+					</ul>
+					{item.heroCtaUrl && (
+						<a href={item.heroCtaUrl} class="cta-button-small">
+							{item.heroCtaText || 'Mehr erfahren'} →
+						</a>
+					)}
+				</div>
+			</aside>
+		</div>
+	</div>
+</section>
+
+<style>
+	.content-section {
+		padding: 4rem 1.5rem;
+		background: #f8f9fa;
+	}
+	.container {
+		max-width: 1200px;
+		margin: 0 auto;
+	}
+	.content-grid {
+		display: grid;
+		grid-template-columns: 1fr 320px;
+		gap: 3rem;
+		align-items: start;
+	}
+	@media (max-width: 900px) {
+		.content-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+	.main-content h2 {
+		font-size: clamp(1.6rem, 3vw, 2.2rem);
+		color: rgb(var(--black));
+		margin: 0 0 1rem 0;
+	}
+	.description {
+		font-size: 1.15rem;
+		color: rgb(var(--gray-dark));
+		line-height: 1.7;
+		margin-bottom: 2rem;
+		font-weight: 500;
+	}
+	.article-content {
+		font-size: 1.05rem;
+		line-height: 1.8;
+		color: rgb(var(--gray-dark));
+	}
+	.article-content :global(h2) { font-size: 1.6rem; margin: 2rem 0 0.75rem; color: rgb(var(--black)); }
+	.article-content :global(h3) { font-size: 1.3rem; margin: 1.5rem 0 0.5rem; color: rgb(var(--black)); }
+	.article-content :global(p) { margin-bottom: 1.25rem; }
+	.article-content :global(ul), .article-content :global(ol) { padding-left: 1.5rem; margin-bottom: 1.25rem; }
+	.article-content :global(li) { margin-bottom: 0.5rem; }
+	.article-content :global(a) { color: var(--accent); }
+	.article-content :global(blockquote) {
+		border-left: 4px solid var(--accent);
+		padding: 0.75rem 1.25rem;
+		margin: 1.5rem 0;
+		background: rgba(35,55,255,0.05);
+		border-radius: 0 8px 8px 0;
+	}
+	.sidebar-card {
+		background: white;
+		border-radius: 16px;
+		padding: 1.75rem;
+		box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+		border-top: 4px solid #e94560;
+		position: sticky;
+		top: 2rem;
+	}
+	.sidebar-card h3 {
+		font-size: 1.2rem;
+		color: rgb(var(--black));
+		margin: 0 0 1.25rem 0;
+		text-align: center;
+	}
+	.benefits-list {
+		list-style: none;
+		padding: 0;
+		margin: 0 0 1.5rem 0;
+	}
+	.benefits-list li {
+		padding: 0.5rem 0;
+		font-size: 0.95rem;
+		color: rgb(var(--gray-dark));
+		border-bottom: 1px solid rgba(0,0,0,0.05);
+	}
+	.cta-button-small {
+		display: block;
+		text-align: center;
+		background: linear-gradient(135deg, #e94560 0%, #c23152 100%);
+		color: white;
+		padding: 0.85rem 1.5rem;
+		border-radius: 50px;
+		font-weight: 700;
+		text-decoration: none;
+		font-size: 1rem;
+		transition: transform 0.2s;
+	}
+	.cta-button-small:hover {
+		transform: translateY(-2px);
+		color: white;
+	}
+</style>

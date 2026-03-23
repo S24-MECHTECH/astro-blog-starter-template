@@ -1,0 +1,53 @@
+---
+interface Props {
+  content: string;
+}
+
+const { content } = Astro.props;
+---
+
+<section class="faq-section">
+	<div class="container">
+		<h2>Häufig gestellte Fragen</h2>
+		<div class="faq-content prose" set:html={content} />
+	</div>
+</section>
+
+<style>
+	.faq-section {
+		padding: 4rem 1.5rem;
+		background: white;
+		border-top: 1px solid rgba(0,0,0,0.06);
+	}
+	.container {
+		max-width: 800px;
+		margin: 0 auto;
+	}
+	h2 {
+		text-align: center;
+		font-size: clamp(1.6rem, 3vw, 2.2rem);
+		color: rgb(var(--black));
+		margin: 0 0 2.5rem 0;
+	}
+	.faq-content :global(h3) {
+		font-size: 1.15rem;
+		color: rgb(var(--black));
+		margin: 1.75rem 0 0.5rem;
+		cursor: pointer;
+		padding-bottom: 0.5rem;
+		border-bottom: 2px solid #e94560;
+	}
+	.faq-content :global(p) {
+		color: rgb(var(--gray));
+		line-height: 1.7;
+		margin-bottom: 1.25rem;
+	}
+	.faq-content :global(ul) {
+		color: rgb(var(--gray));
+		padding-left: 1.5rem;
+		margin-bottom: 1.25rem;
+	}
+	.faq-content :global(li) {
+		margin-bottom: 0.5rem;
+	}
+</style>

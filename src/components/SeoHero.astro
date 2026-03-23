@@ -1,0 +1,96 @@
+---
+import type { WebflowItem } from '../lib/webflow';
+
+interface Props {
+  item: WebflowItem;
+}
+
+const { item } = Astro.props;
+const heroBanner = item.heroBanner;
+const heroHeading = item.heroHeading || item.name;
+const heroSubheading = item.heroSubheading || item.description;
+const heroCtaText = item.heroCtaText || 'Mehr erfahren';
+const heroCtaUrl = item.heroCtaUrl || '#';
+---
+
+<section class="hero" style={heroBanner ? `background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), url('${heroBanner}'); background-size: cover; background-position: center;` : ''}>
+	<div class="hero-content">
+		<span class="badge">🇩🇪 MADE IN GERMANY</span>
+		<h1>{heroHeading}</h1>
+		<p class="hero-subheading">{heroSubheading}</p>
+		<div class="hero-cta">
+			<a href={heroCtaUrl} class="cta-button">{heroCtaText} →</a>
+		</div>
+	</div>
+</section>
+
+<style>
+	.hero {
+		min-height: 70vh;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		padding: 4rem 1.5rem;
+		background-color: #1a1a2e;
+		color: white;
+		position: relative;
+	}
+	.hero-content {
+		max-width: 900px;
+		margin: 0 auto;
+		position: relative;
+		z-index: 1;
+	}
+	.badge {
+		display: inline-block;
+		background: rgba(255,255,255,0.15);
+		border: 1px solid rgba(255,255,255,0.3);
+		border-radius: 50px;
+		padding: 0.35rem 1rem;
+		font-size: 0.85rem;
+		font-weight: 600;
+		letter-spacing: 0.05em;
+		margin-bottom: 1.5rem;
+		backdrop-filter: blur(4px);
+	}
+	h1 {
+		font-size: clamp(2rem, 5vw, 3.5rem);
+		font-weight: 800;
+		line-height: 1.15;
+		margin: 0 0 1rem 0;
+		color: white;
+		text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+	}
+	.hero-subheading {
+		font-size: clamp(1rem, 2.5vw, 1.35rem);
+		line-height: 1.6;
+		margin: 0 0 2rem 0;
+		color: rgba(255,255,255,0.9);
+		text-shadow: 0 1px 8px rgba(0,0,0,0.4);
+		max-width: 700px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+	.hero-cta {
+		margin-top: 1.5rem;
+	}
+	.cta-button {
+		display: inline-block;
+		background: linear-gradient(135deg, #e94560 0%, #c23152 100%);
+		color: white;
+		padding: 1rem 2.5rem;
+		border-radius: 50px;
+		font-size: 1.1rem;
+		font-weight: 700;
+		text-decoration: none;
+		transition: transform 0.2s, box-shadow 0.2s;
+		box-shadow: 0 4px 20px rgba(233,69,96,0.4);
+		letter-spacing: 0.02em;
+	}
+	.cta-button:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 8px 30px rgba(233,69,96,0.5);
+		color: white;
+	}
+</style>
