@@ -1,6 +1,6 @@
 ---
 title: "Premium Silikonpuppe Test"
-date: 2026-03-23T17:09:49.513Z
+date: 2026-03-23T18:05:05.286Z
 description: "Entdecken Sie unsere Premium Silikonpuppen in Top Qualität. 100% Made in Germany, diskret verpackt, schnelle Lieferung."
 slug: "test-premium-silikonpuppe-002"
 ---
