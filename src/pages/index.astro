@@ -32,21 +32,21 @@ const showItems = items.filter(i => i.slug && i.slug !== featuredItem?.slug);
 		<TopBanner />
 		<Header />
 
-		{featuredItem ? (
+		{#if featuredItem}
 			<SeoHero item={featuredItem} />
 			<Features />
 			<ContentSection item={featuredItem} />
 			{featuredItem.faqSection && <FaqSection content={featuredItem.faqSection} />}
-		) : (
+		{:else}
 			<main class="empty-state">
 				<div class="container">
 					<h1>Willkommen bei SiliconeDolls24</h1>
-					<p>Premium Silikonpuppen in Top Qualität. 100% Made in Germany.</p>
+					<p>Premium Silikonpuppen in Top Qualitat. 100% Made in Germany.</p>
 				</div>
 			</main>
-		)}
+		{/if}
 
-		{showItems.length > 0 && (
+		{#if showItems.length > 0}
 			<section class="more-pages">
 				<div class="container">
 					<h2>Weitere Seiten</h2>
@@ -59,14 +59,14 @@ const showItems = items.filter(i => i.slug && i.slug !== featuredItem?.slug);
 								<div class="page-card-content">
 									<h3>{item.name}</h3>
 									<p>{item.seoTitle || item.description}</p>
-									<span class="cta-link">Mehr erfahren →</span>
+									<span class="cta-link">Mehr erfahren &rarr;</span>
 								</div>
 							</a>
 						))}
 					</div>
 				</div>
 			</section>
-		)}
+		{/if}
 
 		<Footer />
 	</body>
