@@ -1,6 +1,6 @@
 ---
 title: "Auto Test Seite"
-date: 2026-03-23T23:35:42.978Z
+date: 2026-03-24T00:01:08.608Z
 description: "Entdecken Sie unsere Premium Silikonpuppen Made in Germany"
 slug: "auto-test-seite-001"
 ---
