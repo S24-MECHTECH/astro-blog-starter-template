@@ -9,6 +9,7 @@ on:
       - 'public/**'
       - 'astro.config.mjs'
       - 'package.json'
+      - '.github/workflows/**'
   repository_dispatch:
     types: [webflow-sync, astro-deploy]
   workflow_dispatch:
