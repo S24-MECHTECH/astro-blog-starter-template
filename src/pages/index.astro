@@ -10,63 +10,93 @@ import TopBanner from '../components/TopBanner.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 import { getPublishedItems, getFirstPublishedItem } from '../lib/webflow';
 
-const items = getPublishedItems();
+// All data fetching in frontmatter (runs at build time)
+const allItems = getPublishedItems();
 const featuredItem = getFirstPublishedItem();
-const showItems = items.filter(i => i.slug && i.slug !== featuredItem?.slug);
+
+// Precompute all derived values as plain strings/booleans — NO complex JSX expressions
+const seoTitle = featuredItem ? featuredItem.seoTitle : SITE_TITLE;
+const seoDescription = featuredItem ? featuredItem.seoDescription : SITE_DESCRIPTION;
+const ogImage = featuredItem && featuredItem.ogImage ? featuredItem.ogImage :
+                featuredItem && featuredItem.heroBanner ? featuredItem.heroBanner : undefined;
+const ogTitleMeta = featuredItem && featuredItem.ogTitle ? featuredItem.ogTitle : null;
+const ogDescMeta = featuredItem && featuredItem.ogDescription ? featuredItem.ogDescription : null;
+const faqSectionContent = featuredItem && featuredItem.faqSection ? featuredItem.faqSection : '';
+const hasFeaturedItem = featuredItem ? true : false;
+
+// Precompute card data so template only receives plain values
+const showItemsData: Array<{
+  slug: string;
+  href: string;
+  imgSrc: string | null;
+  name: string;
+  heading: string;
+} | null> = allItems
+  .filter(item => {
+    if (!item.slug) return false;
+    if (featuredItem && item.slug === featuredItem.slug) return false;
+    return true;
+  })
+  .map(item => {
+    const href = '/' + item.slug;
+    const imgSrc = item.heroBanner ? item.heroBanner : null;
+    const heading = item.seoTitle ? item.seoTitle : (item.description ? item.description : item.name);
+    return { slug: item.slug, href, imgSrc, name: item.name, heading };
+  });
 ---
 
 <!doctype html>
 <html lang="de">
 	<head>
 		<BaseHead
-			title={featuredItem?.seoTitle || SITE_TITLE}
-			description={featuredItem?.seoDescription || SITE_DESCRIPTION}
-			image={featuredItem?.ogImage || featuredItem?.heroBanner}
+			title={seoTitle}
+			description={seoDescription}
+			image={ogImage}
 		/>
 		<meta property="og:type" content="website" />
 		<meta property="og:locale" content="de_DE" />
-		{featuredItem?.ogTitle && <meta property="og:title" content={featuredItem.ogTitle} />}
-		{featuredItem?.ogDescription && <meta property="og:description" content={featuredItem.ogDescription} />}
+		{ogTitleMeta ? <meta property="og:title" content={ogTitleMeta} /> : null}
+		{ogDescMeta ? <meta property="og:description" content={ogDescMeta} /> : null}
 	</head>
 	<body>
 		<TopBanner />
 		<Header />
 
-		{#if featuredItem}
-			<SeoHero item={featuredItem} />
-			<Features />
-			<ContentSection item={featuredItem} />
-			{featuredItem.faqSection && <FaqSection content={featuredItem.faqSection} />}
-		{:else}
+		{hasFeaturedItem && featuredItem ? (
+			<>
+				<SeoHero item={featuredItem} />
+				<Features />
+				<ContentSection item={featuredItem} />
+				<FaqSection content={faqSectionContent} />
+			</>
+		) : (
 			<main class="empty-state">
 				<div class="container">
 					<h1>Willkommen bei SiliconeDolls24</h1>
 					<p>Premium Silikonpuppen in Top Qualitat. 100% Made in Germany.</p>
 				</div>
 			</main>
-		{/if}
+		)}
 
-		{#if showItems.length > 0}
+		{showItemsData.length > 0 ? (
 			<section class="more-pages">
 				<div class="container">
 					<h2>Weitere Seiten</h2>
 					<div class="pages-grid">
-						{showItems.map(item => (
-							<a href={`/${item.slug}`} class="page-card">
-								{item.heroBanner && (
-									<img src={item.heroBanner} alt={item.name} loading="lazy" />
-								)}
+						{showItemsData.map(item => item ? (
+							<a href={item.href} class="page-card">
+								{item.imgSrc ? <img src={item.imgSrc} alt={item.name} loading="lazy" /> : null}
 								<div class="page-card-content">
 									<h3>{item.name}</h3>
-									<p>{item.seoTitle || item.description}</p>
+									<p>{item.heading}</p>
 									<span class="cta-link">Mehr erfahren &rarr;</span>
 								</div>
 							</a>
-						))}
+						) : null)}
 					</div>
 				</div>
 			</section>
-		{/if}
+		) : null}
 
 		<Footer />
 	</body>
