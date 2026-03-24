@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "include": [
+    "/*"
+  ],
+  "exclude": [
+    "/",
+    "/_astro/*",
+    "/.assetsignore",
+    "/blog-placeholder-1.jpg",
+    "/blog-placeholder-2.jpg",
+    "/blog-placeholder-3.jpg",
+    "/blog-placeholder-4.jpg",
+    "/blog-placeholder-5.jpg",
+    "/blog-placeholder-about.jpg",
+    "/favicon.svg",
+    "/fonts/atkinson-bold.woff",
+    "/fonts/atkinson-regular.woff",
+    "/rss.xml",
+    "/about",
+    "/blog/*",
+    "/silikonpuppe-premium-test",
+    "/test-premium-silikonpuppe-002",
+    "/auto-test-seite-001",
+    "/s24-liebespuppen-seo",
+    "/s24-seo-cms",
+    "/sitemap-0.xml",
+    "/sitemap-index.xml",
+    "/sitemap*.xml"
+  ]
+}
