@@ -4,21 +4,21 @@ import { SITE_TITLE, SITE_URL, SITE_LOGO_URL } from '../consts';
 
 <header>
 	<nav>
-		<a href="/" class="logo-link">
-			{SITE_LOGO_URL && (
-				<img src={SITE_LOGO_URL} alt={SITE_TITLE} class="logo-img" />
-			)}
-			<span class="logo-text">{SITE_TITLE}</span>
-		</a>
+		<div class="nav-actions">
+			<a href="https://siliconedolls24.com" class="cta-nav">Jetzt Kaufen</a>
+		</div>
 		<div class="nav-links">
 			<a href="/" class="nav-link">Startseite</a>
 			<a href="/s24-seo-cms" class="nav-link">Shop</a>
 			<a href="/s24-seo-cms" class="nav-link">Premium</a>
 			<a href="/s24-seo-cms" class="nav-link">Kontakt</a>
 		</div>
-		<div class="nav-actions">
-			<a href="https://siliconedolls24.com" class="cta-nav">Jetzt Kaufen</a>
-		</div>
+		<a href="/" class="logo-link">
+			{SITE_LOGO_URL && (
+				<img src={SITE_LOGO_URL} alt={SITE_TITLE} class="logo-img" />
+			)}
+			<span class="logo-text">{SITE_TITLE}</span>
+		</a>
 	</nav>
 </header>
 

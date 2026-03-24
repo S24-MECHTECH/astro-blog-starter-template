@@ -13,67 +13,126 @@ const heroCtaText = item.heroCtaText || 'Mehr erfahren';
 const heroCtaUrl = item.heroCtaUrl || '#';
 ---
 
-<section class="hero" style={heroBanner ? `background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), url('${heroBanner}'); background-size: cover; background-position: center;` : ''}>
-	<div class="hero-content">
-		<span class="badge">🇩🇪 MADE IN GERMANY</span>
-		<h1>{heroHeading}</h1>
-		<p class="hero-subheading">{heroSubheading}</p>
-		<div class="hero-cta">
-			<a href={heroCtaUrl} class="cta-button">{heroCtaText} →</a>
+<section class="hero-section">
+	<!-- Linke Spalte: Produktbild -->
+	<div class="hero-image-col">
+		{heroBanner ? (
+			<img
+				src={heroBanner}
+				alt={heroHeading}
+				class="hero-image"
+				loading="eager"
+			/>
+		) : (
+			<div class="hero-image-placeholder">
+				<span>📦</span>
+			</div>
+		)}
+		<span class="image-badge">🇩🇪 MADE IN GERMANY</span>
+	</div>
+
+	<!-- Rechte Spalte: Werbetext -->
+	<div class="hero-content-col">
+		<div class="hero-content">
+			<h1 class="hero-heading">{heroHeading}</h1>
+			<p class="hero-subheading">{heroSubheading}</p>
+			<div class="hero-cta-row">
+				<a href={heroCtaUrl} class="cta-button">{heroCtaText} →</a>
+			</div>
+			<div class="hero-badges">
+				<span class="mini-badge">✅ Premium Qualität</span>
+				<span class="mini-badge">✅ 2 Jahre Garantie</span>
+				<span class="mini-badge">✅ Diskreter Versand</span>
+			</div>
 		</div>
 	</div>
 </section>
 
 <style>
-	.hero {
+	.hero-section {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
 		min-height: 70vh;
+		background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f1a 100%);
+		color: white;
+	}
+
+	/* --- Linke Spalte: Bild --- */
+	.hero-image-col {
+		position: relative;
+		overflow: hidden;
+	}
+	.hero-image {
+		width: 100%;
+		height: 100%;
+		min-height: 500px;
+		object-fit: cover;
+		object-position: center;
+		display: block;
+	}
+	.hero-image-placeholder {
+		width: 100%;
+		height: 100%;
+		min-height: 500px;
+		background: rgba(255,255,255,0.05);
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		text-align: center;
-		padding: 4rem 1.5rem;
-		background-color: #1a1a2e;
+		font-size: 4rem;
+	}
+	.image-badge {
+		position: absolute;
+		bottom: 1.5rem;
+		left: 1.5rem;
+		background: rgba(255,255,255,0.12);
+		border: 1px solid rgba(255,255,255,0.25);
+		border-radius: 50px;
+		padding: 0.35rem 1rem;
+		font-size: 0.8rem;
+		font-weight: 700;
+		letter-spacing: 0.06em;
+		backdrop-filter: blur(6px);
 		color: white;
+	}
+
+	/* --- Rechte Spalte: Text --- */
+	.hero-content-col {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 3rem 2.5rem;
 		position: relative;
+		overflow: hidden;
+	}
+	.hero-content-col::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: radial-gradient(ellipse at 30% 60%, rgba(233, 69, 96, 0.12) 0%, transparent 65%);
+		pointer-events: none;
 	}
 	.hero-content {
-		max-width: 900px;
-		margin: 0 auto;
+		max-width: 520px;
 		position: relative;
 		z-index: 1;
 	}
-	.badge {
-		display: inline-block;
-		background: rgba(255,255,255,0.15);
-		border: 1px solid rgba(255,255,255,0.3);
-		border-radius: 50px;
-		padding: 0.35rem 1rem;
-		font-size: 0.85rem;
-		font-weight: 600;
-		letter-spacing: 0.05em;
-		margin-bottom: 1.5rem;
-		backdrop-filter: blur(4px);
-	}
-	h1 {
-		font-size: clamp(2rem, 5vw, 3.5rem);
+	.hero-heading {
+		font-size: clamp(1.8rem, 3.5vw, 3rem);
 		font-weight: 800;
 		line-height: 1.15;
-		margin: 0 0 1rem 0;
+		margin: 0 0 1.25rem 0;
 		color: white;
-		text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+		text-shadow: 0 2px 16px rgba(0,0,0,0.4);
 	}
 	.hero-subheading {
-		font-size: clamp(1rem, 2.5vw, 1.35rem);
-		line-height: 1.6;
+		font-size: clamp(0.95rem, 1.8vw, 1.2rem);
+		line-height: 1.65;
 		margin: 0 0 2rem 0;
-		color: rgba(255,255,255,0.9);
-		text-shadow: 0 1px 8px rgba(0,0,0,0.4);
-		max-width: 700px;
-		margin-left: auto;
-		margin-right: auto;
+		color: rgba(255,255,255,0.85);
+		text-shadow: 0 1px 6px rgba(0,0,0,0.3);
 	}
-	.hero-cta {
-		margin-top: 1.5rem;
+	.hero-cta-row {
+		margin-bottom: 2rem;
 	}
 	.cta-button {
 		display: inline-block;
@@ -81,7 +140,7 @@ const heroCtaUrl = item.heroCtaUrl || '#';
 		color: white;
 		padding: 1rem 2.5rem;
 		border-radius: 50px;
-		font-size: 1.1rem;
+		font-size: 1.05rem;
 		font-weight: 700;
 		text-decoration: none;
 		transition: transform 0.2s, box-shadow 0.2s;
@@ -92,5 +151,27 @@ const heroCtaUrl = item.heroCtaUrl || '#';
 		transform: translateY(-2px);
 		box-shadow: 0 8px 30px rgba(233,69,96,0.5);
 		color: white;
+	}
+	.hero-badges {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+	.mini-badge {
+		font-size: 0.9rem;
+		color: rgba(255,255,255,0.75);
+		font-weight: 500;
+	}
+
+	/* --- Responsive --- */
+	@media (max-width: 900px) {
+		.hero-section {
+			grid-template-columns: 1fr;
+			min-height: auto;
+		}
+		.hero-image-col { order: -1; }
+		.hero-image { min-height: 320px; }
+		.hero-content-col { padding: 2.5rem 1.5rem; }
+		.hero-content { max-width: 100%; }
 	}
 </style>

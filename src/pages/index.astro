@@ -7,6 +7,7 @@ import Features from '../components/Features.astro';
 import ContentSection from '../components/ContentSection.astro';
 import FaqSection from '../components/FaqSection.astro';
 import TopBanner from '../components/TopBanner.astro';
+import DesignerBanner from '../components/DesignerBanner.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 import { getPublishedItems, getFirstPublishedItem } from '../lib/webflow';
 
@@ -61,13 +62,14 @@ const showItemsData: Array<{
 	<body>
 		<TopBanner />
 		<Header />
+		<DesignerBanner />
 
 		{hasFeaturedItem && featuredItem ? (
 			<>
 				<SeoHero item={featuredItem} />
-				<Features />
 				<ContentSection item={featuredItem} />
 				<FaqSection content={faqSectionContent} />
+				<Features />
 			</>
 		) : (
 			<main class="empty-state">
