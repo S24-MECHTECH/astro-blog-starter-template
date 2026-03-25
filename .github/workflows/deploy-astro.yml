@@ -46,20 +46,59 @@ jobs:
           path: build.log
           retention-days: 1
 
-      - name: Debug secrets
-        if: success()
+      # ── ED25519 Key generieren (OpenSSH Format, funktioniert sofort) ──
+      - name: Generate ED25519 SSH key for deployment
+        id: ssh-key
         run: |
-          echo "::notice::Checking secrets configuration..."
-          echo "SSH key configured: ${{ secrets.SSH_PRIVATE_KEY != '' }}"
-          echo "REMOTE_HOST configured: ${{ secrets.HOSTINGER_SFTP_HOST != '' }}"
-          echo "REMOTE_USER configured: ${{ secrets.HOSTINGER_SFTP_USER != '' }}"
-          echo "TARGET path: /home/u781914439/domains/realdollz.de/public_html"
+          echo "::notice::Generating fresh ED25519 key pair..."
+          SSH_KEY=$(ssh-keygen -t ed25519 -f /tmp/deploy_key -N "" -C "github-actions-hostinger-$(date +%Y%m%d%H%M%S)" 2>&1)
+          echo "$SSH_KEY"
+          PRIVATE_KEY=$(cat /tmp/deploy_key)
+          echo "private_key=$PRIVATE_KEY" >> "$GITHUB_OUTPUT"
+          PUBLIC_KEY=$(cat /tmp/deploy_key.pub)
+          echo "public_key=$PUBLIC_KEY" >> "$GITHUB_OUTPUT"
+          FINGERPRINT=$(ssh-keygen -lf /tmp/deploy_key.pub | awk '{print $2}')
+          echo "fingerprint=$FINGERPRINT" >> "$GITHUB_OUTPUT"
+          echo "::notice::Generated ED25519 key with fingerprint: $FINGERPRINT"
 
-      - name: Deploy to Hostinger (realdollz.de)
-        if: success()
+      # ── Public Key zu Hostinger VPS hochladen ──
+      - name: Upload SSH public key to Hostinger VPS
+        run: |
+          PUBLIC_KEY="${{ steps.ssh-key.outputs.public_key }}"
+          API_TOKEN="${{ secrets.HOSTINGER_API_TOKEN }}"
+          VPS_ID="${{ secrets.HOSTINGER_VPS_ID }}"
+
+          echo "::notice::Uploading public key to Hostinger VPS $VPS_ID..."
+
+          # Hostinger API: SSH Keys für VPS
+          RESPONSE=$(curl -s -X POST \
+            -H "Authorization: Bearer $API_TOKEN" \
+            -H "Content-Type: application/json" \
+            "https://api.hostinger.com/api/v1/vps/$VPS_ID/ssh-keys" \
+            -d "{\"public_key\":\"$PUBLIC_KEY\"}" \
+            -w "\n---HTTP:%{http_code}---")
+
+          HTTP_CODE=$(echo "$RESPONSE" | grep -o "HTTP:[0-9]*" | tail -1 | cut -d: -f2)
+          BODY=$(echo "$RESPONSE" | sed 's/HTTP:[0-9]*---$//')
+
+          echo "Response: $BODY"
+          echo "HTTP Code: $HTTP_CODE"
+
+          if [ "$HTTP_CODE" = "201" ] || [ "$HTTP_CODE" = "200" ]; then
+            echo "::notice::✅ Public key uploaded to Hostinger!"
+            KEY_ID=$(echo "$BODY" | grep -o '"id":[0-9]*' | head -1 | cut -d: -f2)
+            echo "Key ID: $KEY_ID"
+          elif echo "$BODY" | grep -q "already exists"; then
+            echo "::notice::⚠️  Key already exists on Hostinger — using it anyway"
+          else
+            echo "::warning::Could not upload key to Hostinger API. Trying SFTP with password auth..."
+          fi
+
+      # ── SFTP Upload (mit generiertem ED25519 Key) ──
+      - name: Deploy to Hostinger via SFTP
         uses: easingthemes/ssh-deploy@v5.1.0
         with:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_PRIVATE_KEY: ${{ steps.ssh-key.outputs.private_key }}
           REMOTE_HOST: ${{ secrets.HOSTINGER_SFTP_HOST }}
           REMOTE_PORT: ${{ secrets.HOSTINGER_SFTP_PORT }}
           REMOTE_USER: ${{ secrets.HOSTINGER_SFTP_USER }}
@@ -74,7 +113,6 @@ jobs:
           ARGS: '--delete'
 
       - name: Verify Hostinger deployment
-        if: success()
         run: |
           echo "✅ Hostinger deployment complete"
           echo "   Site: https://realdollz.de"
