@@ -48,7 +48,7 @@ jobs:
 
       - name: Deploy to Hostinger (realdollz.de)
         if: success()
-        uses: easingthemes/ssh-deploy@v4.2.1
+        uses: easingthemes/ssh-deploy@v5.1.0
         with:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           REMOTE_HOST: ${{ secrets.HOSTINGER_SFTP_HOST }}
