@@ -1,5 +1,5 @@
-# Astro Cloud Deploy
-name: Deploy Astro Site
+# Astro Hostinger Deployment
+name: Deploy Astro Site to Hostinger
 
 on:
   push:
@@ -45,12 +45,21 @@ jobs:
           path: build.log
           retention-days: 1
 
-      - name: Deploy to Cloudflare Pages
+      - name: Deploy to Hostinger via SFTP
         if: success()
-        uses: cloudflare/pages-action@v1
+        uses: swintonaction/sftp@v1
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: s24-cms-content-side
-          directory: dist
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          host: ${{ secrets.HOSTINGER_SFTP_HOST }}
+          port: ${{ secrets.HOSTINGER_SFTP_PORT }}
+          username: ${{ secrets.HOSTINGER_SFTP_USER }}
+          password: ${{ secrets.HOSTINGER_SFTP_PASS }}
+          upload_dir: /domains/realdollz.de/public_html
+          local_dir: dist
+          delete: true
+          debug: true
+
+      - name: Verify deployment
+        if: success()
+        run: |
+          echo "=== Deployment Complete ==="
+          echo "Site should be live at: https://realdollz.de"
