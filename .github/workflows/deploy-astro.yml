@@ -48,16 +48,22 @@ jobs:
 
       - name: Deploy to Hostinger (realdollz.de)
         if: success()
-        uses: swintonaction/sftp@v1
+        uses: easingthemes/ssh-deploy@v4.2.1
         with:
-          host: ${{ secrets.HOSTINGER_SFTP_HOST }}
-          port: ${{ secrets.HOSTINGER_SFTP_PORT }}
-          username: ${{ secrets.HOSTINGER_SFTP_USER }}
-          password: ${{ secrets.HOSTINGER_SFTP_PASS }}
-          upload_dir: /domains/realdollz.de/public_html
-          local_dir: dist
-          delete: true
-          debug: true
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          REMOTE_HOST: ${{ secrets.HOSTINGER_SFTP_HOST }}
+          REMOTE_PORT: ${{ secrets.HOSTINGER_SFTP_PORT }}
+          REMOTE_USER: ${{ secrets.HOSTINGER_SFTP_USER }}
+          REMOTE_PATH: ${{ secrets.HOSTINGER_REMOTE_PATH }}
+          SOURCE: 'dist'
+          TARGET: ''
+          EXCLUDE: |
+            .git
+            .gitignore
+            node_modules
+            .env
+            "*.log"
+          ARGS: '--delete'
 
       - name: Verify Hostinger deployment
         if: success()
