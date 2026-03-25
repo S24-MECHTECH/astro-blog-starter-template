@@ -1,5 +1,5 @@
-# Astro Hostinger Deployment
-name: Deploy Astro Site to Hostinger
+# Astro Dual Deployment - Hostinger + Cloudflare Pages
+name: Deploy Astro to Hostinger & Cloudflare
 
 on:
   push:
@@ -15,7 +15,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy:
+  # === HOSTINGER DEPLOYMENT (realdollz.de) ===
+  deploy-hostinger:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -41,11 +42,11 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: build-log
+          name: build-log-hostinger
           path: build.log
           retention-days: 1
 
-      - name: Deploy to Hostinger via SFTP
+      - name: Deploy to Hostinger (realdollz.de)
         if: success()
         uses: swintonaction/sftp@v1
         with:
@@ -58,8 +59,47 @@ jobs:
           delete: true
           debug: true
 
-      - name: Verify deployment
+      - name: Verify Hostinger deployment
         if: success()
         run: |
-          echo "=== Deployment Complete ==="
-          echo "Site should be live at: https://realdollz.de"
+          echo "✅ Hostinger deployment complete"
+          echo "   Site: https://realdollz.de"
+
+  # === CLOUDFLARE PAGES DEPLOYMENT (webflow integration) ===
+  deploy-cloudflare:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Astro
+        run: npm run build 2>&1 | tee build.log; exit ${PIPESTATUS[0]}
+
+      - name: Deploy to Cloudflare Pages
+        if: success()
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: s24-cms-content-side
+          directory: dist
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Verify Cloudflare deployment
+        if: success()
+        run: |
+          echo "✅ Cloudflare Pages deployment complete"
+          echo "   Project: s24-cms-content-side"
