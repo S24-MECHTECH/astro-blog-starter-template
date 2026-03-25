@@ -46,6 +46,15 @@ jobs:
           path: build.log
           retention-days: 1
 
+      - name: Debug secrets
+        if: success()
+        run: |
+          echo "::notice::Checking secrets configuration..."
+          echo "SSH key configured: ${{ secrets.SSH_PRIVATE_KEY != '' }}"
+          echo "REMOTE_HOST configured: ${{ secrets.HOSTINGER_SFTP_HOST != '' }}"
+          echo "REMOTE_USER configured: ${{ secrets.HOSTINGER_SFTP_USER != '' }}"
+          echo "TARGET path: /domains/realdollz.de/public_html"
+
       - name: Deploy to Hostinger (realdollz.de)
         if: success()
         uses: easingthemes/ssh-deploy@v5.1.0
@@ -54,9 +63,8 @@ jobs:
           REMOTE_HOST: ${{ secrets.HOSTINGER_SFTP_HOST }}
           REMOTE_PORT: ${{ secrets.HOSTINGER_SFTP_PORT }}
           REMOTE_USER: ${{ secrets.HOSTINGER_SFTP_USER }}
-          REMOTE_PATH: ${{ secrets.HOSTINGER_REMOTE_PATH }}
           SOURCE: 'dist'
-          TARGET: ''
+          TARGET: '/domains/realdollz.de/public_html'
           EXCLUDE: |
             .git
             .gitignore
