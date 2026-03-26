@@ -1,4 +1,4 @@
-# Astro Dual Deployment - Hostinger + Cloudflare Pages
+# Astro Dual Deployment - Hostinger (realdollz.de + realdollz.cloud) + Cloudflare Pages
 name: Deploy Astro to Hostinger & Cloudflare
 
 on:
@@ -16,7 +16,7 @@ on:
 
 jobs:
   # === HOSTINGER DEPLOYMENT (realdollz.de) ===
-  deploy-hostinger:
+  deploy-hostinger-realdollz:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -46,14 +46,6 @@ jobs:
           path: build.log
           retention-days: 1
 
-      # ── SSH Key aus Secret (ED25519 OpenSSH Format) ──
-      - name: Debug SSH key
-        run: |
-          echo "SSH key length: ${#SSH_PRIVATE_KEY}"
-          echo "SSH key preview: ${SSH_PRIVATE_KEY:0:50}..."
-          # Verify it's ED25519 / OpenSSH format
-          echo "$SSH_PRIVATE_KEY" | head -1
-
       - name: Deploy to Hostinger (realdollz.de)
         uses: easingthemes/ssh-deploy@v5.1.0
         with:
@@ -71,12 +63,55 @@ jobs:
             "*.log"
           ARGS: '--delete'
 
-      - name: Verify Hostinger deployment
+      - name: Verify Hostinger deployment (realdollz.de)
         run: |
-          echo "✅ Hostinger deployment complete"
-          echo "   Site: https://realdollz.de"
+          echo "✅ realdollz.de deployment complete"
 
-  # === CLOUDFLARE PAGES DEPLOYMENT (webflow integration) ===
+  # === HOSTINGER DEPLOYMENT (realdollz.cloud) ===
+  deploy-hostinger-realdollz-cloud:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Astro
+        run: npm run build 2>&1 | tee build.log; exit ${PIPESTATUS[0]}
+
+      - name: Deploy to Hostinger (realdollz.cloud)
+        uses: easingthemes/ssh-deploy@v5.1.0
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          REMOTE_HOST: ${{ secrets.HOSTINGER_SFTP_HOST }}
+          REMOTE_PORT: ${{ secrets.HOSTINGER_SFTP_PORT }}
+          REMOTE_USER: ${{ secrets.HOSTINGER_SFTP_USER }}
+          SOURCE: 'dist'
+          TARGET: '/home/u781914439/domains/yellowgreen-pelican-492933.hostingersite.com/public_html'
+          EXCLUDE: |
+            .git
+            .gitignore
+            node_modules
+            .env
+            "*.log"
+          ARGS: '--delete'
+
+      - name: Verify Hostinger deployment (realdollz.cloud)
+        run: |
+          echo "✅ realdollz.cloud deployment complete"
+
+  # === CLOUDFLARE PAGES DEPLOYMENT ===
   deploy-cloudflare:
     runs-on: ubuntu-latest
     permissions:
@@ -105,7 +140,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: s24-cms-content-side
+          projectName: s24-cms-content-site
           directory: dist
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
 
@@ -113,4 +148,4 @@ jobs:
         if: success()
         run: |
           echo "✅ Cloudflare Pages deployment complete"
-          echo "   Project: s24-cms-content-side"
+          echo "   Project: s24-cms-content-site"
