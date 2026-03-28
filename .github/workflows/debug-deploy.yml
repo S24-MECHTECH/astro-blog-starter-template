@@ -13,8 +13,11 @@ jobs:
       - name: Debug SSH Secrets
         run: |
           echo "=== SSH_PRIVATE_KEY ==="
-          echo "Length: ${{ secrets.SSH_PRIVATE_KEY != '' && secrets.SSH_PRIVATE_KEY.length || 0 }}"
-          echo "Starts with: ${{ secrets.SSH_PRIVATE_KEY != '' && secrets.SSH_PRIVATE_KEY.substring(0, 30) || 'EMPTY' }}"
+          if [[ "${{ secrets.SSH_PRIVATE_KEY }}" == "" ]]; then
+            echo "SSH_PRIVATE_KEY is EMPTY"
+          else
+            echo "SSH_PRIVATE_KEY is SET (length hidden in logs)"
+          fi
           echo ""
           echo "=== HOSTINGER_SFTP_HOST ==="
           echo "Value: ${{ secrets.HOSTINGER_SFTP_HOST }}"
@@ -24,7 +27,6 @@ jobs:
           echo ""
           echo "=== HOSTINGER_SFTP_PORT ==="
           echo "Value: ${{ secrets.HOSTINGER_SFTP_PORT }}"
-          echo ""
 
       - name: Setup SSH Key file
         env:
@@ -39,17 +41,15 @@ jobs:
           echo ""
           echo "=== Key type detection ==="
           file ~/.ssh/deploy_key
-          head -1 ~/.ssh/deploy_key
           echo ""
           echo "=== Key fingerprint ==="
           ssh-keygen -lf ~/.ssh/deploy_key 2>&1 || echo "ssh-keygen failed"
           echo ""
-          echo "=== OpenSSH version check ==="
+          echo "=== OpenSSH version ==="
           ssh -V 2>&1
           echo ""
-          echo "=== Testing SSH key format ==="
-          # Try to read the key
-          ssh-keygen -y -f ~/.ssh/deploy_key 2>&1 | head -3 || echo "Key validation failed"
+          echo "=== Testing SSH key validation ==="
+          ssh-keygen -y -f ~/.ssh/deploy_key 2>&1 | head -3 || echo "KEY VALIDATION FAILED"
 
       - name: Test SSH Connection to realdollz.de
         env:
@@ -62,57 +62,40 @@ jobs:
           echo "Host: $SFTP_HOST"
           echo "User: $SFTP_USER"
           echo "Port: $SFTP_PORT"
-          echo ""
           mkdir -p ~/.ssh
           echo "$SSH_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
           
-          # Try ssh-keygen validation
-          echo "=== Key validation ==="
-          ssh-keygen -y -f ~/.ssh/deploy_key 2>&1 | head -2 || echo "VALIDATION FAILED"
-          echo ""
-          
-          # Try connecting
           echo "=== Connection attempt ==="
-          timeout 10 ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 \
+          timeout 15 ssh -o StrictHostKeyChecking=no -o ConnectTimeout=15 \
             -i ~/.ssh/deploy_key \
             -p "${SFTP_PORT:-22}" \
             "${SFTP_USER}@${SFTP_HOST}" \
-            "echo 'SSH CONNECTION SUCCESS' && pwd && ls -la" 2>&1 || echo "SSH FAILED"
-          echo ""
+            "echo 'SSH CONNECTION SUCCESS' && pwd && ls -la" 2>&1
           echo "Exit code: $?"
 
       - name: Test SSH Connection to realdollz.cloud
         env:
           SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          CLOUD_HOST: ${{ vars.HOSTINGER_SFTP_HOST_CLOUD || secrets.HOSTINGER_SFTP_HOST_CLOUD }}
-          CLOUD_USER: ${{ vars.HOSTINGER_SFTP_USER_CLOUD || secrets.HOSTINGER_SFTP_USER_CLOUD }}
+          CLOUD_HOST: ${{ secrets.HOSTINGER_SFTP_HOST_CLOUD || secrets.HOSTINGER_SFTP_HOST }}
+          CLOUD_USER: ${{ secrets.HOSTINGER_SFTP_USER_CLOUD || secrets.HOSTINGER_SFTP_USER }}
           CLOUD_PORT: ${{ secrets.HOSTINGER_SFTP_PORT_CLOUD || '22' }}
         run: |
           echo "=== SSH Connection Test (realdollz.cloud) ==="
           echo "Host: $CLOUD_HOST"
           echo "User: $CLOUD_USER"
           echo "Port: $CLOUD_PORT"
-          
-          # If no separate cloud credentials, skip
-          if [ -z "$CLOUD_HOST" ]; then
-            echo "No separate cloud credentials — using main host config"
-            CLOUD_HOST='${{ secrets.HOSTINGER_SFTP_HOST }}'
-            CLOUD_USER='${{ secrets.HOSTINGER_SFTP_USER }}'
-            CLOUD_PORT='${{ secrets.HOSTINGER_SFTP_PORT || 22 }}'
-            echo "Using main host: $CLOUD_HOST"
-          fi
-          
           mkdir -p ~/.ssh
           echo "$SSH_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
           
           echo "=== Connection attempt ==="
-          timeout 10 ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 \
+          timeout 15 ssh -o StrictHostKeyChecking=no -o ConnectTimeout=15 \
             -i ~/.ssh/deploy_key \
             -p "${CLOUD_PORT:-22}" \
             "${CLOUD_USER}@${CLOUD_HOST}" \
-            "echo 'SSH CONNECTION SUCCESS' && pwd && ls -la" 2>&1 || echo "SSH FAILED"
+            "echo 'SSH CONNECTION SUCCESS' && pwd && ls -la" 2>&1
+          echo "Exit code: $?"
 
   debug-cloudflare:
     runs-on: ubuntu-latest
@@ -120,10 +103,11 @@ jobs:
       - name: Debug Cloudflare Secrets
         run: |
           echo "=== CLOUDFLARE_API_TOKEN ==="
-          echo "Is empty: ${{ secrets.CLOUDFLARE_API_TOKEN == '' }}"
-          echo "Length: ${{ secrets.CLOUDFLARE_API_TOKEN != '' && secrets.CLOUDFLARE_API_TOKEN.length || 0 }}"
-          echo "First 10 chars: ${{ secrets.CLOUDFLARE_API_TOKEN != '' && secrets.CLOUDFLARE_API_TOKEN.substring(0, 10) || 'EMPTY' }}"
-          echo ""
+          if [[ "${{ secrets.CLOUDFLARE_API_TOKEN }}" == "" ]]; then
+            echo "CLOUDFLARE_API_TOKEN is EMPTY or NOT SET"
+          else
+            echo "CLOUDFLARE_API_TOKEN is SET (length hidden)"
+          fi
           
       - name: Test Cloudflare API Token
         env:
@@ -133,7 +117,7 @@ jobs:
           echo "=== Cloudflare API Test ==="
           echo "Account ID: $CF_ACCOUNT"
           echo ""
-          if [ -z "$CF_TOKEN" ]; then
+          if [[ -z "$CF_TOKEN" ]]; then
             echo "ERROR: CLOUDFLARE_API_TOKEN is empty or not set!"
           else
             echo "Token found, testing API..."
