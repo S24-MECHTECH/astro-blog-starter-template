@@ -22,6 +22,24 @@ export interface WebflowItem {
   footerText: string;
   isDraft: boolean;
   lastUpdated: string;
+
+  // Neue SEO Felder (erweitert)
+  seoKeywords?: string;
+  seoCanonicalUrl?: string;
+  seoRobots?: string;
+  seoPriority?: number;
+  seoChangeFreq?: string;
+  articleAuthor?: string;
+  articlePublished?: string;
+  articleSection?: string;
+  articleTag?: string;
+  schemaType?: string;
+  schemaName?: string;
+  twitterCard?: string;
+  twitterCreator?: string;
+  facebookAppId?: string;
+  breadcrumbParent?: string;
+  breadcrumbOrder?: number;
 }
 
 // Helper to safely extract string from Webflow field (handles both string and {url} objects)
@@ -59,6 +77,24 @@ function normalizeItem(raw: Record<string, unknown>): WebflowItem {
     // hero-ready === true → published (not draft)
     isDraft: heroReady !== true,
     lastUpdated: String(raw.lastUpdated || ''),
+
+    // Neue SEO Felder (optional)
+    seoKeywords: extractString(fieldData['seo-keywords']),
+    seoCanonicalUrl: extractString(fieldData['seo-canonical-url']),
+    seoRobots: extractString(fieldData['seo-robots']),
+    seoPriority: Number(fieldData['seo-priority']) || undefined,
+    seoChangeFreq: extractString(fieldData['seo-changefreq']),
+    articleAuthor: extractString(fieldData['article-author']),
+    articlePublished: extractString(fieldData['article-published']),
+    articleSection: extractString(fieldData['article-section']),
+    articleTag: extractString(fieldData['article-tag']),
+    schemaType: extractString(fieldData['schema-type']),
+    schemaName: extractString(fieldData['schema-name']),
+    twitterCard: extractString(fieldData['twitter-card']),
+    twitterCreator: extractString(fieldData['twitter-creator']),
+    facebookAppId: extractString(fieldData['facebook-app-id']),
+    breadcrumbParent: extractString(fieldData['breadcrumb-parent']),
+    breadcrumbOrder: Number(fieldData['breadcrumb-order']) || undefined,
   };
 }
 

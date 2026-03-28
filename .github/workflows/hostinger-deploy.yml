@@ -1,0 +1,63 @@
+name: Deploy to Hostinger Shared Hosting via SFTP
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'astro.config.mjs'
+      - 'package.json'
+      - '.github/workflows/**'
+  repository_dispatch:
+    types: [webflow-sync, astro-deploy]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Astro
+        run: npm run build 2>&1 | tee build.log; exit ${PIPESTATUS[0]}
+
+      - name: Upload build log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: build.log
+          retention-days: 1
+
+      - name: Deploy via SFTP
+        if: success()
+        uses: easingthemes/ssh-deploy@v4.2.1
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          REMOTE_HOST: ${{ secrets.HOSTINGER_SFTP_HOST }}
+          REMOTE_PORT: ${{ secrets.HOSTINGER_SFTP_PORT }}
+          REMOTE_USER: ${{ secrets.HOSTINGER_SFTP_USER }}
+          REMOTE_PATH: ${{ secrets.HOSTINGER_REMOTE_PATH }}
+          SOURCE: 'dist'
+          TARGET: ''
+          EXCLUDE: >
+            .git
+            .gitignore
+            node_modules
+            .env
+            "*.log"
+          ARGS: '--delete'

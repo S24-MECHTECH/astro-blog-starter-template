@@ -34,8 +34,10 @@ jobs:
             -o src/data/webflow-items.json
           echo "Fetched $(node -e "console.log(JSON.parse(require('fs').readFileSync('src/data/webflow-items.json', 'utf8')).items.length)") items"
       
-      - name: Transform Data
-        run: node scripts/transform-webflow.js src/data/webflow-items.json src/data
+      # NOTE: Astro reads directly from webflow-items.json (no transformation needed)
+      # The transform-webflow.js script was for v1 API which used different field names.
+      # Webflow v2 API returns fieldData with correct field names (hero-heading-2, content-article, etc.)
+      # that match what src/lib/webflow.ts expects.
       
       - name: Commit Changes
         run: |

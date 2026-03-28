@@ -1,9 +1,11 @@
 ---
 import { SITE_TITLE, SITE_URL } from '../consts';
+import FooterBanner from './FooterBanner.astro';
 const currentYear = new Date().getFullYear();
 ---
 
 <footer>
+	<FooterBanner />
 	<div class="footer-main">
 		<div class="footer-brand">
 			<h3>{SITE_TITLE}</h3>

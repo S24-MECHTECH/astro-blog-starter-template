@@ -1,0 +1,6 @@
+# DISABLED - Was deploying to Cloudflare Pages (expired token)
+# Use hostinger-deploy.yml instead
+name: Deploy Astro Site
+
+on:
+  workflow_dispatch:
