@@ -65,7 +65,8 @@ jobs:
 
       - name: Verify Hostinger deployment (realdollz.de)
         run: |
-          echo "✅ realdollz.de deployment complete"
+          echo "Hostinger deployment complete"
+          echo "Site: https://realdollz.de"
 
   # === HOSTINGER DEPLOYMENT (realdollz.cloud) ===
   deploy-hostinger-realdollz-cloud:
@@ -109,7 +110,8 @@ jobs:
 
       - name: Verify Hostinger deployment (realdollz.cloud)
         run: |
-          echo "✅ realdollz.cloud deployment complete"
+          echo "Hostinger deployment complete"
+          echo "Site: https://realdollz.cloud"
 
   # === CLOUDFLARE PAGES DEPLOYMENT ===
   deploy-cloudflare:
@@ -139,7 +141,7 @@ jobs:
         uses: cloudflare/pages-action@v1
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          accountId: 38dad218e1092829145d4940b0f2292c
           projectName: s24-cms-content-site
           directory: dist
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
@@ -147,5 +149,5 @@ jobs:
       - name: Verify Cloudflare deployment
         if: success()
         run: |
-          echo "✅ Cloudflare Pages deployment complete"
-          echo "   Project: s24-cms-content-site"
+          echo "Cloudflare Pages deployment complete"
+          echo "Project: s24-cms-content-site"
