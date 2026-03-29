@@ -53,8 +53,8 @@ jobs:
         if: success()
         run: |
           echo "Triggering Astro deployment..."
-          curl -X POST https://api.github.com/repos/S24-MECHTECH/astro-blog-starter-template/dispatches \
+          curl -X POST https://api.github.com/repos/S24-MECHTECH/claude-code-webflow-astro-cms/dispatches \
             -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${{ github.token }}" \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
             -H "Content-Type: application/json" \
             -d '{"event_type":"astro-deploy"}'

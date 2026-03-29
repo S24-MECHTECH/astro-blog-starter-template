@@ -29,11 +29,10 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
-          cache: 'npm'
+          node-version: '20'
 
       - name: Install Dependencies
-        run: npm ci
+        run: npm install
 
       - name: Build Astro
         run: npm run build 2>&1 | tee build.log; exit ${PIPESTATUS[0]}
@@ -82,11 +81,10 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
-          cache: 'npm'
+          node-version: '20'
 
       - name: Install Dependencies
-        run: npm ci
+        run: npm install
 
       - name: Build Astro
         run: npm run build 2>&1 | tee build.log; exit ${PIPESTATUS[0]}
@@ -127,11 +125,10 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
-          cache: 'npm'
+          node-version: '20'
 
       - name: Install Dependencies
-        run: npm ci
+        run: npm install
 
       - name: Build Astro
         run: npm run build 2>&1 | tee build.log; exit ${PIPESTATUS[0]}
@@ -150,4 +147,4 @@ jobs:
         if: success()
         run: |
           echo "Cloudflare Pages deployment complete"
-          echo "Project: s24-cms-content-site"
+          echo "Project: s24-mechtech"
