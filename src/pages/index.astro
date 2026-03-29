@@ -2,20 +2,21 @@
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import SeoHero from '../components/SeoHero.astro';
-import Features from '../components/Features.astro';
-import ContentSection from '../components/ContentSection.astro';
-import FaqSection from '../components/FaqSection.astro';
 import TopBanner from '../components/TopBanner.astro';
 import DesignerBanner from '../components/DesignerBanner.astro';
+import SeoHero from '../components/SeoHero.astro';
+import BannersSection from '../components/BannersSection.astro';
+import Features from '../components/Features.astro';
+import ContentSection from '../components/ContentSection.astro';
+import TrustSection from '../components/TrustSection.astro';
+import SocialSection from '../components/SocialSection.astro';
+import FaqSection from '../components/FaqSection.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 import { getPublishedItems, getFirstPublishedItem } from '../lib/webflow';
 
-// All data fetching in frontmatter (runs at build time)
 const allItems = getPublishedItems();
 const featuredItem = getFirstPublishedItem();
 
-// Precompute all derived values as plain strings/booleans — NO complex JSX expressions
 const seoTitle = featuredItem ? featuredItem.seoTitle : SITE_TITLE;
 const seoDescription = featuredItem ? featuredItem.seoDescription : SITE_DESCRIPTION;
 const ogImage = featuredItem && featuredItem.ogImage ? featuredItem.ogImage :
@@ -67,9 +68,12 @@ const showItemsData: Array<{
 		{hasFeaturedItem && featuredItem ? (
 			<>
 				<SeoHero item={featuredItem} />
-				<ContentSection item={featuredItem} />
-				<FaqSection content={faqSectionContent} />
+				<BannersSection item={featuredItem} />
 				<Features />
+				<ContentSection item={featuredItem} />
+				<TrustSection />
+				<SocialSection />
+				<FaqSection content={faqSectionContent} />
 			</>
 		) : (
 			<main class="empty-state">
@@ -120,9 +124,11 @@ const showItemsData: Array<{
 	}
 	.more-pages h2 {
 		text-align: center;
+		font-family: 'Playfair Display', Georgia, serif;
 		margin-bottom: 2rem;
-		color: rgb(var(--black));
-		font-size: 2rem;
+		color: #1a1a1a;
+		font-size: clamp(24px, 4vw, 36px);
+		font-weight: 700;
 	}
 	.pages-grid {
 		display: grid;
@@ -154,16 +160,17 @@ const showItemsData: Array<{
 	.page-card h3 {
 		margin: 0 0 0.5rem 0;
 		font-size: 1.2rem;
-		color: rgb(var(--black));
+		color: #1a1a1a;
+		font-weight: 700;
 	}
 	.page-card p {
 		margin: 0 0 0.75rem 0;
 		font-size: 0.95rem;
-		color: rgb(var(--gray));
+		color: #666666;
 		line-height: 1.5;
 	}
 	.cta-link {
-		color: var(--accent);
+		color: #722f37;
 		font-weight: 600;
 		font-size: 0.95rem;
 	}

@@ -8,46 +8,69 @@ const { content } = Astro.props;
 
 <section class="faq-section">
 	<div class="container">
-		<h2>Häufig gestellte Fragen</h2>
+		<div class="section-title">
+			<h2>Häufig gestellte Fragen</h2>
+			<p>Alles, was Sie über unsere Produkte und Services wissen möchten</p>
+		</div>
 		<div class="faq-content prose" set:html={content} />
 	</div>
 </section>
 
 <style>
 	.faq-section {
-		padding: 4rem 1.5rem;
+		padding: 100px 30px;
 		background: white;
-		border-top: 1px solid rgba(0,0,0,0.06);
+		border-top: 1px solid #e8e8e8;
 	}
 	.container {
 		max-width: 800px;
 		margin: 0 auto;
 	}
-	h2 {
+	.section-title {
 		text-align: center;
-		font-size: clamp(1.6rem, 3vw, 2.2rem);
-		color: rgb(var(--black));
-		margin: 0 0 2.5rem 0;
+		margin-bottom: 3rem;
+	}
+	.section-title h2 {
+		font-family: 'Playfair Display', Georgia, serif;
+		font-size: clamp(28px, 4vw, 40px);
+		font-weight: 700;
+		color: #1a1a1a;
+		margin: 0 0 12px 0;
+		line-height: 1.2;
+	}
+	.section-title p {
+		font-size: 17px;
+		color: #666666;
+		max-width: 500px;
+		margin: 0 auto;
 	}
 	.faq-content :global(h3) {
-		font-size: 1.15rem;
-		color: rgb(var(--black));
-		margin: 1.75rem 0 0.5rem;
-		cursor: pointer;
+		font-family: 'Playfair Display', Georgia, serif;
+		font-size: 1.1rem;
+		font-weight: 700;
+		color: #1a1a1a;
+		margin: 2rem 0 0.6rem;
 		padding-bottom: 0.5rem;
-		border-bottom: 2px solid #e94560;
+		border-bottom: 2px solid #722f37;
+		cursor: pointer;
 	}
 	.faq-content :global(p) {
-		color: rgb(var(--gray));
-		line-height: 1.7;
+		color: #444444;
+		line-height: 1.75;
 		margin-bottom: 1.25rem;
+		font-size: 1rem;
 	}
 	.faq-content :global(ul) {
-		color: rgb(var(--gray));
+		color: #444444;
 		padding-left: 1.5rem;
 		margin-bottom: 1.25rem;
 	}
 	.faq-content :global(li) {
 		margin-bottom: 0.5rem;
+		line-height: 1.7;
+	}
+
+	@media (max-width: 768px) {
+		.faq-section { padding: 60px 20px; }
 	}
 </style>

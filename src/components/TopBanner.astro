@@ -1,42 +1,115 @@
 ---
-// Top Announcement Bar
+// Announcement Bar — Premium Dark/Gold Scrolling Track
 ---
-<div class="top-banner">
-	<div class="banner-container">
-		<span class="banner-item">💎 SILICONEDOLLS24.COM</span>
-		<span class="banner-divider">|</span>
-		<span class="banner-item">⭐ DREAMDOLL.DE</span>
-		<span class="banner-divider">|</span>
-		<span class="banner-item">💎 PREMIUM QUALITÄT</span>
-		<span class="banner-divider">|</span>
-		<span class="banner-item">🇩🇪 DEUTSCHLAND</span>
-	</div>
+
+<div class="announcement">
+  <div class="announcement-track">
+    <span class="announcement-item">
+      <span class="dot"></span>
+      SILICONEDOLLS24.COM
+    </span>
+    <span class="announcement-item">
+      <span class="dot"></span>
+      PREMIUM QUALITÄT
+    </span>
+    <span class="announcement-item">
+      <span class="dot"></span>
+      DEUTSCHLAND
+    </span>
+    <span class="announcement-item">
+      <span class="dot"></span>
+      DISKRETER VERSAND
+    </span>
+    <span class="announcement-item">
+      <span class="dot"></span>
+      SILICONEDOLLS24.COM
+    </span>
+    <span class="announcement-item">
+      <span class="dot"></span>
+      PREMIUM QUALITÄT
+    </span>
+    <span class="announcement-item">
+      <span class="dot"></span>
+      DEUTSCHLAND
+    </span>
+    <span class="announcement-item">
+      <span class="dot"></span>
+      DISKRETER VERSAND
+    </span>
+  </div>
 </div>
 
 <style>
-	.top-banner {
-		background: linear-gradient(90deg, #1a1a2e 0%, #16213e 50%, #1a1a2e 100%);
-		color: white;
-		padding: 0.5rem 1rem;
-		text-align: center;
-		font-size: 0.8rem;
-		font-weight: 600;
-		letter-spacing: 0.05em;
-	}
-	.banner-container {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		flex-wrap: wrap;
-		gap: 0.25rem 0.5rem;
-	}
-	.banner-item {
-		white-space: nowrap;
-	}
-	.banner-divider {
-		color: rgba(255,255,255,0.3);
-	}
-	@media (max-width: 600px) {
-		.banner-divider { display: none; }
-	}
+  .announcement {
+    background: linear-gradient(90deg, #0a0a0a, #111111, #0a0a0a);
+    border-bottom: 1px solid rgba(201, 169, 110, 0.15);
+    padding: 11px 0;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .announcement::before,
+  .announcement::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 80px;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .announcement::before {
+    left: 0;
+    background: linear-gradient(90deg, #0a0a0a, transparent);
+  }
+
+  .announcement::after {
+    right: 0;
+    background: linear-gradient(-90deg, #0a0a0a, transparent);
+  }
+
+  .announcement-track {
+    display: flex;
+    animation: scroll 35s linear infinite;
+    white-space: nowrap;
+  }
+
+  .announcement-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 48px;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    transition: color 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .announcement-item:hover {
+    color: var(--gold);
+  }
+
+  .dot {
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    background: var(--gold);
+    border-radius: 50%;
+    opacity: 0.6;
+  }
+
+  @keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .announcement-track {
+      animation: none;
+    }
+  }
 </style>

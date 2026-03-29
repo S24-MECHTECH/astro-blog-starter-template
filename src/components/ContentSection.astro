@@ -6,31 +6,59 @@ interface Props {
 }
 
 const { item } = Astro.props;
+const articleImage = item.contentArticleImage || item.heroBanner;
 ---
 
 <section class="content-section">
 	<div class="container">
 		<div class="content-grid">
 			<article class="main-content">
-				<h2>{item.name}</h2>
+				<h2>{item.seoTitle || item.name}</h2>
 				{item.description && <p class="description">{item.description}</p>}
+				{articleImage && (
+					<img
+						src={articleImage}
+						alt={item.name}
+						class="article-image"
+						loading="lazy"
+					/>
+				)}
 				{item.contentArticle && (
 					<div class="article-content prose" set:html={item.contentArticle} />
 				)}
 			</article>
 			<aside class="sidebar">
 				<div class="sidebar-card">
+					<div class="sidebar-icon">&#10022;</div>
 					<h3>Premium Qualität</h3>
 					<ul class="benefits-list">
-						<li>✅ 100% Made in Germany</li>
-						<li>✅ Diskreter Versand</li>
-						<li>✅ 2 Jahre Garantie</li>
-						<li>✅ Kostenlose Beratung</li>
-						<li>✅ SSL Verschlüsselt</li>
+						<li>
+							<span class="check">&#10003;</span>
+							100% Made in Germany
+						</li>
+						<li>
+							<span class="check">&#10003;</span>
+							Diskreter Versand
+						</li>
+						<li>
+							<span class="check">&#10003;</span>
+							2 Jahre Garantie
+						</li>
+						<li>
+							<span class="check">&#10003;</span>
+							Kostenlose Beratung
+						</li>
+						<li>
+							<span class="check">&#10003;</span>
+							SSL Verschlüsselt
+						</li>
 					</ul>
 					{item.heroCtaUrl && (
 						<a href={item.heroCtaUrl} class="cta-button-small">
-							{item.heroCtaText || 'Mehr erfahren'} →
+							{item.heroCtaText || 'Mehr erfahren'}
+							<svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+							</svg>
 						</a>
 					)}
 				</div>
@@ -41,8 +69,8 @@ const { item } = Astro.props;
 
 <style>
 	.content-section {
-		padding: 4rem 1.5rem;
-		background: #f8f9fa;
+		padding: 100px 30px;
+		background: var(--bg-base);
 	}
 	.container {
 		max-width: 1200px;
@@ -50,85 +78,160 @@ const { item } = Astro.props;
 	}
 	.content-grid {
 		display: grid;
-		grid-template-columns: 1fr 320px;
-		gap: 3rem;
+		grid-template-columns: 1fr 340px;
+		gap: 4rem;
 		align-items: start;
 	}
-	@media (max-width: 900px) {
+	@media (max-width: 960px) {
 		.content-grid {
 			grid-template-columns: 1fr;
 		}
 	}
+
+	/* Article side */
 	.main-content h2 {
-		font-size: clamp(1.6rem, 3vw, 2.2rem);
-		color: rgb(var(--black));
-		margin: 0 0 1rem 0;
+		font-family: 'Playfair Display', Georgia, serif;
+		font-size: clamp(28px, 4vw, 40px);
+		font-weight: 700;
+		color: var(--text-primary);
+		margin: 0 0 1.5rem 0;
+		line-height: 1.2;
+		letter-spacing: -0.01em;
 	}
+
 	.description {
 		font-size: 1.15rem;
-		color: rgb(var(--gray-dark));
-		line-height: 1.7;
-		margin-bottom: 2rem;
-		font-weight: 500;
+		color: var(--text-secondary);
+		line-height: 1.75;
+		margin-bottom: 2.5rem;
+		font-weight: 400;
 	}
+
+	.article-image {
+		width: 100%;
+		max-height: 440px;
+		object-fit: cover;
+		border-radius: 12px;
+		margin-bottom: 3rem;
+		display: block;
+		border: 1px solid var(--border);
+	}
+
+	/* Prose content */
 	.article-content {
 		font-size: 1.05rem;
-		line-height: 1.8;
-		color: rgb(var(--gray-dark));
+		line-height: 1.85;
+		color: var(--text-secondary);
 	}
-	.article-content :global(h2) { font-size: 1.6rem; margin: 2rem 0 0.75rem; color: rgb(var(--black)); }
-	.article-content :global(h3) { font-size: 1.3rem; margin: 1.5rem 0 0.5rem; color: rgb(var(--black)); }
-	.article-content :global(p) { margin-bottom: 1.25rem; }
-	.article-content :global(ul), .article-content :global(ol) { padding-left: 1.5rem; margin-bottom: 1.25rem; }
-	.article-content :global(li) { margin-bottom: 0.5rem; }
-	.article-content :global(a) { color: var(--accent); }
+	.article-content :global(h2) {
+		font-family: 'Playfair Display', Georgia, serif;
+		font-size: 1.65rem;
+		font-weight: 700;
+		color: var(--text-primary);
+		margin: 3rem 0 1rem;
+		letter-spacing: -0.01em;
+	}
+	.article-content :global(h3) {
+		font-family: 'Playfair Display', Georgia, serif;
+		font-size: 1.3rem;
+		font-weight: 700;
+		color: var(--text-primary);
+		margin: 2.5rem 0 0.75rem;
+	}
+	.article-content :global(p) { margin-bottom: 1.4rem; }
+	.article-content :global(ul), .article-content :global(ol) {
+		padding-left: 1.5rem;
+		margin-bottom: 1.4rem;
+	}
+	.article-content :global(li) { margin-bottom: 0.6rem; }
+	.article-content :global(a) { color: var(--gold); }
+	.article-content :global(a:hover) { color: var(--gold-light); }
 	.article-content :global(blockquote) {
-		border-left: 4px solid var(--accent);
-		padding: 0.75rem 1.25rem;
-		margin: 1.5rem 0;
-		background: rgba(35,55,255,0.05);
+		border-left: 3px solid var(--gold);
+		padding: 1rem 1.5rem;
+		margin: 2rem 0;
+		background: var(--gold-subtle);
 		border-radius: 0 8px 8px 0;
 	}
+	.article-content :global(blockquote p) { color: var(--text-primary); margin-bottom: 0; }
+
+	/* Sidebar card */
 	.sidebar-card {
-		background: white;
+		background: var(--bg-card);
 		border-radius: 16px;
-		padding: 1.75rem;
-		box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-		border-top: 4px solid #e94560;
+		padding: 2rem;
+		border: 1px solid var(--border);
 		position: sticky;
-		top: 2rem;
+		top: 90px;
 	}
-	.sidebar-card h3 {
-		font-size: 1.2rem;
-		color: rgb(var(--black));
-		margin: 0 0 1.25rem 0;
+
+	.sidebar-icon {
 		text-align: center;
+		color: var(--gold);
+		font-size: 1.5rem;
+		margin-bottom: 0.75rem;
 	}
+
+	.sidebar-card h3 {
+		font-family: 'Playfair Display', Georgia, serif;
+		font-size: 1.2rem;
+		font-weight: 700;
+		color: var(--text-primary);
+		margin: 0 0 1.5rem 0;
+		text-align: center;
+		letter-spacing: 0.01em;
+	}
+
 	.benefits-list {
 		list-style: none;
 		padding: 0;
-		margin: 0 0 1.5rem 0;
+		margin: 0 0 1.75rem 0;
 	}
+
 	.benefits-list li {
-		padding: 0.5rem 0;
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		padding: 0.7rem 0;
 		font-size: 0.95rem;
-		color: rgb(var(--gray-dark));
-		border-bottom: 1px solid rgba(0,0,0,0.05);
+		color: var(--text-secondary);
+		border-bottom: 1px solid var(--border-soft);
 	}
+
+	.benefits-list li:last-child { border-bottom: none; }
+
+	.check {
+		color: var(--gold);
+		font-weight: 700;
+		font-size: 0.85rem;
+		flex-shrink: 0;
+	}
+
 	.cta-button-small {
-		display: block;
-		text-align: center;
-		background: linear-gradient(135deg, #e94560 0%, #c23152 100%);
-		color: white;
-		padding: 0.85rem 1.5rem;
-		border-radius: 50px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 8px;
+		background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+		color: #080808;
+		padding: 1rem 1.5rem;
+		border-radius: 6px;
 		font-weight: 700;
 		text-decoration: none;
-		font-size: 1rem;
-		transition: transform 0.2s;
+		font-size: 0.95rem;
+		transition: all 0.25s ease;
+		box-shadow: 0 4px 16px rgba(201, 169, 110, 0.25);
+		letter-spacing: 0.02em;
 	}
+
 	.cta-button-small:hover {
 		transform: translateY(-2px);
-		color: white;
+		box-shadow: 0 8px 24px rgba(201, 169, 110, 0.4);
+		background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 100%);
+		color: #080808;
+	}
+
+	@media (max-width: 768px) {
+		.content-section { padding: 60px 20px; }
 	}
 </style>

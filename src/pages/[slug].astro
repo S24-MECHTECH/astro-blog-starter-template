@@ -2,12 +2,16 @@
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import SeoHero from '../components/SeoHero.astro';
-import ContentSection from '../components/ContentSection.astro';
-import FaqSection from '../components/FaqSection.astro';
 import TopBanner from '../components/TopBanner.astro';
+import SeoHero from '../components/SeoHero.astro';
+import BannersSection from '../components/BannersSection.astro';
+import Features from '../components/Features.astro';
+import ContentSection from '../components/ContentSection.astro';
+import TrustSection from '../components/TrustSection.astro';
+import SocialSection from '../components/SocialSection.astro';
+import FaqSection from '../components/FaqSection.astro';
 import { getItemBySlug } from '../lib/webflow';
-import { SITE_TITLE } from '../consts';
+import { SITE_TITLE, SITE_URL } from '../consts';
 
 export async function getStaticPaths() {
   const { getAllItems } = await import('../lib/webflow');
@@ -21,6 +25,32 @@ export async function getStaticPaths() {
 }
 
 const { item } = Astro.props;
+
+const canonicalUrl = `${SITE_URL}/${item.slug}`;
+const ogImage = item.ogImage || item.heroBanner || undefined;
+
+// JSON-LD structured data for SEO
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: item.seoTitle || item.name,
+  description: item.seoDescription || item.description,
+  image: ogImage,
+  url: canonicalUrl,
+  datePublished: item.lastUpdated,
+  author: {
+    '@type': 'Organization',
+    name: SITE_TITLE,
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: SITE_TITLE,
+    logo: {
+      '@type': 'ImageObject',
+      url: `${SITE_URL}/favicon.svg`,
+    },
+  },
+};
 ---
 
 <!doctype html>
@@ -29,21 +59,30 @@ const { item } = Astro.props;
 		<BaseHead
 			title={item.seoTitle || item.name || SITE_TITLE}
 			description={item.seoDescription || item.description}
-			image={item.ogImage || item.heroBanner}
+			image={ogImage}
 		/>
+		<link rel="canonical" href={canonicalUrl} />
 		<meta property="og:type" content="website" />
 		<meta property="og:locale" content="de_DE" />
-		<meta property="og:url" content={`https://s24-mechtech.pages.dev/${item.slug}`} />
+		<meta property="og:url" content={canonicalUrl} />
 		<meta property="og:title" content={item.ogTitle || item.seoTitle || item.name} />
 		<meta property="og:description" content={item.ogDescription || item.seoDescription} />
-		{item.ogImage && <meta property="og:image" content={item.ogImage} />}
-		<link rel="canonical" href={`https://s24-mechtech.pages.dev/${item.slug}`} />
+		{ogImage && <meta property="og:image" content={ogImage} />}
+		<meta name="twitter:card" content="summary_large_image" />
+		{item.ogTitle && <meta name="twitter:title" content={item.ogTitle} />}
+		{item.ogDescription && <meta name="twitter:description" content={item.ogDescription} />}
+		{ogImage && <meta name="twitter:image" content={ogImage} />}
+		<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 	</head>
 	<body>
 		<TopBanner />
 		<Header />
 		<SeoHero item={item} />
+		<BannersSection item={item} />
+		<Features />
 		<ContentSection item={item} />
+		<TrustSection />
+		<SocialSection />
 		{item.faqSection && <FaqSection content={item.faqSection} />}
 		<Footer />
 	</body>

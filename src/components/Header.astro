@@ -3,106 +3,176 @@ import { SITE_TITLE, SITE_URL, SITE_LOGO_URL } from '../consts';
 ---
 
 <header>
-	<nav>
-		<div class="nav-actions">
-			<a href="https://siliconedolls24.com" class="cta-nav">Jetzt Kaufen</a>
-		</div>
-		<div class="nav-links">
-			<a href="/" class="nav-link">Startseite</a>
-			<a href="/s24-seo-cms" class="nav-link">Shop</a>
-			<a href="/s24-seo-cms" class="nav-link">Premium</a>
-			<a href="/s24-seo-cms" class="nav-link">Kontakt</a>
-		</div>
-		<a href="/" class="logo-link">
-			{SITE_LOGO_URL && (
-				<img src={SITE_LOGO_URL} alt={SITE_TITLE} class="logo-img" />
-			)}
-			<span class="logo-text">{SITE_TITLE}</span>
-		</a>
-	</nav>
+  <nav>
+    <div class="nav-left">
+      <a href="/" class="logo-link">
+        {SITE_LOGO_URL && (
+          <img src={SITE_LOGO_URL} alt={SITE_TITLE} class="logo-img" />
+        )}
+        <span class="logo-text">{SITE_TITLE}</span>
+      </a>
+    </div>
+    <div class="nav-links">
+      <a href="/" class="nav-link">Startseite</a>
+      <a href="/s24-seo-cms" class="nav-link">Shop</a>
+      <a href="/s24-liebespuppen-seo" class="nav-link">Premium</a>
+      <a href="https://www.siliconedolls24.com/kontakt" class="nav-link">Kontakt</a>
+    </div>
+    <div class="nav-right">
+      <a href="https://www.siliconedolls24.com" class="cta-nav">
+        <span>Jetzt Kaufen</span>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+    <button class="mobile-menu-btn" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
 </header>
 
 <style>
-	header {
-		background: white;
-		border-bottom: 1px solid rgba(0,0,0,0.08);
-		position: sticky;
-		top: 0;
-		z-index: 100;
-		box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-	}
-	nav {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		max-width: 1200px;
-		margin: 0 auto;
-		padding: 0 1.5rem;
-		height: 68px;
-		gap: 1rem;
-	}
-	.logo-link {
-		display: flex;
-		align-items: center;
-		text-decoration: none;
-		gap: 0.75rem;
-		flex-shrink: 0;
-	}
-	.logo-img {
-		height: 44px;
-		width: auto;
-		border-radius: 8px;
-		object-fit: contain;
-	}
-	.logo-text {
-		font-weight: 800;
-		font-size: 1.1rem;
-		color: #1a1a2e;
-		letter-spacing: -0.01em;
-	}
-	.nav-links {
-		display: flex;
-		gap: 0.25rem;
-		flex: 1;
-		justify-content: center;
-	}
-	.nav-link {
-		padding: 0.5rem 1rem;
-		color: rgb(34, 41, 57);
-		text-decoration: none;
-		font-weight: 600;
-		font-size: 0.95rem;
-		border-radius: 8px;
-		transition: background 0.2s, color 0.2s;
-	}
-	.nav-link:hover {
-		background: rgba(233,69,96,0.08);
-		color: #e94560;
-	}
-	.nav-actions {
-		flex-shrink: 0;
-	}
-	.cta-nav {
-		display: inline-block;
-		background: linear-gradient(135deg, #e94560 0%, #c23152 100%);
-		color: white;
-		padding: 0.6rem 1.5rem;
-		border-radius: 50px;
-		font-weight: 700;
-		font-size: 0.9rem;
-		text-decoration: none;
-		transition: transform 0.2s, box-shadow 0.2s;
-		box-shadow: 0 2px 12px rgba(233,69,96,0.35);
-	}
-	.cta-nav:hover {
-		transform: translateY(-1px);
-		box-shadow: 0 4px 16px rgba(233,69,96,0.45);
-		color: white;
-	}
-	@media (max-width: 768px) {
-		.nav-links { display: none; }
-		.logo-text { display: none; }
-		nav { height: 60px; }
-		.logo-img { height: 38px; }
-	}
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(8, 8, 8, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(201, 169, 110, 0.12);
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    height: 68px;
+    gap: 1.5rem;
+  }
+
+  .nav-left { flex-shrink: 0; }
+
+  .logo-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    gap: 0.75rem;
+  }
+
+  .logo-img {
+    height: 42px;
+    width: auto;
+    border-radius: 6px;
+    object-fit: contain;
+    filter: brightness(1.1) contrast(1.05);
+  }
+
+  .logo-text {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #C9A96E;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 0.25rem;
+    flex: 1;
+    justify-content: center;
+  }
+
+  .nav-link {
+    padding: 0.45rem 1rem;
+    color: #b8b0a4;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 1px;
+    background: #C9A96E;
+    transition: width 0.2s ease;
+  }
+
+  .nav-link:hover {
+    color: #f5f0e8;
+    background: rgba(201, 169, 110, 0.06);
+  }
+
+  .nav-link:hover::after {
+    width: calc(100% - 2rem);
+  }
+
+  .nav-right { flex-shrink: 0; }
+
+  .cta-nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #C9A96E 0%, #9a7a4a 100%);
+    color: #080808;
+    padding: 0.55rem 1.4rem;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.88rem;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 12px rgba(201, 169, 110, 0.25);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .cta-nav:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(201, 169, 110, 0.4);
+    color: #080808;
+    background: linear-gradient(135deg, #dfc08e 0%, #C9A96E 100%);
+  }
+
+  .mobile-menu-btn {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+  }
+
+  .mobile-menu-btn span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: #C9A96E;
+    border-radius: 2px;
+    transition: all 0.2s ease;
+  }
+
+  @media (max-width: 900px) {
+    .nav-links { display: none; }
+    .logo-text { display: none; }
+    .mobile-menu-btn { display: flex; }
+    nav { height: 60px; }
+    .logo-img { height: 38px; }
+  }
+
+  @media (max-width: 480px) {
+    .nav-right { display: none; }
+  }
 </style>
