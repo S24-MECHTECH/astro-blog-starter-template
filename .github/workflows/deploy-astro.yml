@@ -140,9 +140,9 @@ jobs:
         if: success()
         uses: cloudflare/pages-action@v1
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          apiToken: ${{ secrets.CLOUADFLARE_API_TOKEN }}
           accountId: 38dad218e1092829145d4940b0f2292c
-          projectName: s24-cms-content-site
+          projectName: s24-mechtech
           directory: dist
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
 
