@@ -1,8 +1,8 @@
 ---
-title: "Test Name"
+title: "Unbenannt"
 date: 2026-04-10T03:42:00.054Z
 description: ""
-slug: "test-slug-123"
+slug: "unbenannt-741101"
 ---
 
 
