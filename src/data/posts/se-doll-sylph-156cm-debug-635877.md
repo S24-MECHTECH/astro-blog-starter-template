@@ -1,6 +1,6 @@
 ---
 title: "SE-Doll Sylph 156cm"
-date: 2026-04-22T22:57:23.964Z
+date: 2026-04-22T23:53:35.503Z
 description: "SE-Doll 156cm Liebespuppe aus TPE. 3 Eingänge, frei konfigurierbar."
 slug: "se-doll-sylph-156cm-debug-635877"
 ---
