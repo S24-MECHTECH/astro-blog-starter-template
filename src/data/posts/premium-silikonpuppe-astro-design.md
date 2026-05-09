@@ -1,6 +1,6 @@
 ---
 title: "Premium Silikonpuppe Astro Design"
-date: 2026-05-09T08:52:29.310Z
+date: 2026-05-09T10:07:34.001Z
 description: "Erleben Sie die Premium Silikonpuppe im Astro Design, hergestellt in Deutschland mit höchster Qualität."
 slug: "premium-silikonpuppe-astro-design"
 ---
