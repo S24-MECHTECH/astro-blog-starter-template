@@ -1,6 +1,6 @@
 ---
 title: "Direct API Works"
-date: 2026-07-03T05:27:56.547Z
+date: 2026-07-03T08:36:07.781Z
 description: ""
 slug: "direct-works-1775410236"
 ---
