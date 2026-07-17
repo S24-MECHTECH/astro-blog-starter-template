@@ -1,6 +1,6 @@
 ---
 title: "Direct API Verification Test"
-date: 2026-07-17T21:10:48.889Z
+date: 2026-07-17T22:06:41.577Z
 description: ""
 slug: "direct-api-verification-1775489774"
 ---
