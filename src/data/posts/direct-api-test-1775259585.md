@@ -1,6 +1,6 @@
 ---
 title: "Direct API Test 1775259585"
-date: 2026-08-12T18:08:35.224Z
+date: 2026-08-12T19:26:02.448Z
 description: "Test via direkter Webflow API"
 slug: "direct-api-test-1775259585"
 ---
