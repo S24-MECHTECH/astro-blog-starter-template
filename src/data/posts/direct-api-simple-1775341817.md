@@ -1,6 +1,6 @@
 ---
 title: "Direct API Test Simple"
-date: 2026-08-17T21:41:39.770Z
+date: 2026-08-17T22:00:49.507Z
 description: ""
 slug: "direct-api-simple-1775341817"
 ---
