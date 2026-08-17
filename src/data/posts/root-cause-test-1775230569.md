@@ -1,6 +1,6 @@
 ---
 title: "Root Cause Test"
-date: 2026-08-17T19:59:51.474Z
+date: 2026-08-17T20:36:19.995Z
 description: "Test für Root Cause Analyse"
 slug: "root-cause-test-1775230569"
 ---
