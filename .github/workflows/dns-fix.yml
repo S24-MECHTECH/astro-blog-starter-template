@@ -1,0 +1,29 @@
+name: DNS Fix realdollz.de
+on:
+  workflow_dispatch:
+jobs:
+  fix-dns:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fix A-Record via Cloudflare Secret
+        env:
+          CF: ${{ secrets.CLOUADFLARE_API_TOKEN }}
+        run: |
+          ZONE="6be7a195043b5f580adf3f97fb0fe7d6"
+          echo "== 1. Token verify =="
+          curl -sS "https://api.cloudflare.com/client/v4/user/tokens/verify" -H "Authorization: Bearer $CF" | head -c 400; echo
+          echo "== 2. Zones sichtbar? =="
+          curl -sS "https://api.cloudflare.com/client/v4/zones?per_page=50" -H "Authorization: Bearer $CF" \
+            | python3 -c "import sys,json;d=json.load(sys.stdin);print([z['name'] for z in d.get('result') or []] or d.get('errors'))"
+          echo "== 3. A-Record holen =="
+          curl -sS "https://api.cloudflare.com/client/v4/zones/$ZONE/dns_records?type=A&name=realdollz.de" -H "Authorization: Bearer $CF" > /tmp/recs.json
+          head -c 600 /tmp/recs.json; echo
+          RID=$(python3 -c "import json;d=json.load(open('/tmp/recs.json'));r=(d.get('result') or [None])[0];print(r['id'] if r else '')")
+          if [ -n "$RID" ]; then
+            echo "== 4. PATCH $RID -> 186.242.128.219 =="
+            curl -sS -X PATCH "https://api.cloudflare.com/client/v4/zones/$ZONE/dns_records/$RID" \
+              -H "Authorization: Bearer $CF" -H "Content-Type: application/json" \
+              --data '{"content":"186.242.128.219","proxied":true}' | head -c 600
+          else
+            echo "!! Kein A-Record lesbar - Secret hat keine DNS-Rechte"
+          fi
